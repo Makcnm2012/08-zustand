@@ -13,13 +13,15 @@ interface FetchNotesResponse {
 
 export const fetchNotes = async (
   page: number,
-  search: string
+  search: string,
+  tag?: string
 ): Promise<FetchNotesResponse> => {
   const { data } = await instance.get<FetchNotesResponse>('/notes', {
     params: {
       perPage: 12,
       page,
       search,
+      tag,
     },
   });
 
