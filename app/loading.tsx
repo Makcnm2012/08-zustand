@@ -1,11 +1,6 @@
-'use client';
+import css from "./Loader.module.css";
 
-const Loading = () => {
-  return (
-    <div>
-      <p>Loading, please wait...</p>
-    </div>
-  );
-};
-
-export default Loading;
+function Loader() {
+  return <p className={css.text}>Loading, please wait...</p>;
+}
+export default Loader;

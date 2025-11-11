@@ -1,64 +1,60 @@
-import { fetchNotes } from '@/lib/api';
 import {
-  dehydrate,
-  HydrationBoundary,
   QueryClient,
-} from '@tanstack/react-query';
-import NotesClient from './Notes.client';
-import Section from '@/components/Section/Section';
+  HydrationBoundary,
+  dehydrate,
+} from "@tanstack/react-query";
+import { fetchNotes } from "@/lib/api";
+import NotesClient from "@/app/notes/filter/[...slug]/Notes.client";
+import { Metadata } from "next";
 
-import { Metadata } from 'next';
-
-interface NotesProps {
+type Props = {
   params: Promise<{ slug: string[] }>;
-}
+};
 
-export const generateMetadata = async ({
-  params,
-}: NotesProps): Promise<Metadata> => {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const raw = slug[0] ? decodeURIComponent(slug[0]) : '';
-  const tag = raw === 'All notes' ? undefined : raw;
+  const filter = slug?.[0] || "all";
+
+  const title = `Notes filtered by "${filter}"`;
+  const description = `Browse all notes filtered by category or tag: "${filter}". Keep your ideas organized with NoteHub.`;
 
   return {
-    title: tag ? `${tag}` : `All notes`,
-    description: tag ? `Notes filtered by tag: ${tag}` : 'Browse all notes',
+    title,
+    description,
     openGraph: {
-      title: tag ? `${tag}` : `All notes`,
-      description: tag ? `Notes filtered by tag: ${tag}` : 'Browse all notes',
-      url: `https://08-zustand-teal-omega.vercel.app/filter/${tag}`,
+      title,
+      description,
+      url: `https://08-zustand-gamma-henna.vercel.app/notes/filter/${filter}`,
       images: [
         {
-          url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
+          url: "https://08-zustand-gamma-henna.vercel.app/images/notes-filter.png",
           width: 1200,
           height: 630,
-          alt: tag ? `${tag}` : `All notes`,
+          alt: `Notes filtered by ${filter}`,
         },
       ],
     },
   };
-};
+}
 
-const Notes = async ({ params }: NotesProps) => {
+export default async function NotesByCategory({ params }: Props) {
   const { slug } = await params;
-
-  const raw = slug[0] ? decodeURIComponent(slug[0]) : '';
-  const tag = raw === 'All notes' ? undefined : raw;
-  // const tag = slug[0] === 'All notes' ? undefined : slug[0];
+  const categoryId = slug?.[0];
+  const isAll = categoryId === "all";
 
   const queryClient = new QueryClient();
+
   await queryClient.prefetchQuery({
-    queryKey: ['notes', tag],
-    queryFn: () => fetchNotes(1, '', tag),
+    queryKey: ["notes", "", 1, isAll ? undefined : categoryId],
+    queryFn: () => fetchNotes("", 1, isAll ? undefined : categoryId),
   });
 
   return (
-    <Section>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <NotesClient tag={tag} />
-      </HydrationBoundary>
-    </Section>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <NotesClient
+        key={categoryId || "all"}
+        tag={isAll ? undefined : categoryId}
+      />
+    </HydrationBoundary>
   );
-};
-
-export default Notes;
+}

@@ -1,13 +1,19 @@
 export interface Note {
-  content: string;
-  createdAt: string;
   id: string;
-  tag: string;
   title: string;
+  content: string; 
+  createdAt: string;
   updatedAt: string;
-}
-export interface NewNote {
-  content: string;
   tag: string;
-  title: string;
+}
+
+export interface NewNote {
+    
+    title: string;
+    content: string;
+    tag: string;
+}
+export interface Category {
+  id: string;
+  name: string;
 }

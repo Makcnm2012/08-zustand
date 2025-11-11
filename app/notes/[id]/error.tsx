@@ -1,17 +1,14 @@
-'use client';
+"use client";
 
-import Section from '@/components/Section/Section';
-import css from './NoteDetails.module.css';
-
-interface ErrorProps {
+type Props = {
   error: Error;
-}
+};
 
-const Error = ({ error }: ErrorProps) => {
+const Error = ({ error }: Props) => {
   return (
-    <Section>
-      <p className={css.mid}>Something went wrong: {error.message}</p>
-    </Section>
+    <div>
+      <p>Could not fetch the list of notes. {error.message}</p>
+    </div>
   );
 };
 

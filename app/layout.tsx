@@ -1,33 +1,35 @@
-import type { Metadata } from 'next';
-import { Roboto } from 'next/font/google';
-import './globals.css';
-import Header from '@/components/Header/Header';
-import Footer from '@/components/Footer/Footer';
-import TanStackProvider from '@/components/TanStackProvider/TanStackProvider';
+import type { Metadata } from "next";
+import { Roboto } from "next/font/google";
+import "./globals.css";
+import { Header } from "@/components/Header/Header";
+import { Footer } from "@/components/Footer/Footer";
+import TanStackProvider from "@/components/TanStackProvider/TanStackProvider";
+
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-roboto",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: 'Note Hub',
-  description: 'An application for note-taking and organization',
+  title: "NoteHub",
+  description: "App for your note",
   openGraph: {
-    title: 'Note Hub',
-    description: 'An application for note-taking and organization',
-    url: 'https://08-zustand-teal-omega.vercel.app/',
+    title: "NoteHub",
+    description: "App for your note",
+    url: "https://08-zustand-gamma-henna.vercel.app/",
     images: [
       {
-        url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
+        url: "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",
         width: 1200,
         height: 630,
-        alt: 'An application for note-taking and organization',
+        alt: "NoteHub",
       },
     ],
   },
 };
-const roboto = Roboto({
-  variable: '--font-roboto',
-  subsets: ['latin'],
-  display: 'swap',
-  weight: ['400', '500', '700'],
-});
+
 export default function RootLayout({
   children,
   modal,
@@ -37,10 +39,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={roboto.variable}>
+      <body
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "100vh",
+        }}
+        className={roboto.variable}
+      >
         <TanStackProvider>
           <Header />
-          {children}
+          <main style={{ flex: 1 }}>{children}</main>
           {modal}
           <Footer />
         </TanStackProvider>

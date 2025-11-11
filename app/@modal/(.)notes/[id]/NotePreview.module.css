@@ -52,7 +52,6 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  text-align: center;
 }
 
 .backBtn {
@@ -61,7 +60,7 @@
   font-size: 14px;
   color: #000000;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
   text-decoration: underline;
   display: inline-block;

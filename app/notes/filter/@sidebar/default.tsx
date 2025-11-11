@@ -1,27 +1,34 @@
-import Link from 'next/link';
-import css from './Sidebar.module.css';
+import Link from "next/link";
+import css from "./SidebarNotes.module.css";
 
-const tagsMenuNames: string[] = [
-  'All notes',
-  'Todo',
-  'Work',
-  'Personal',
-  'Meeting',
-  'Shopping',
-];
+export default async function SidebarNotes() {
+  const tags: string[] = ["Todo", "Work", "Personal", "Meeting", "Shopping"];
 
-const Sidebar = () => {
   return (
-    <ul className={css.menuList}>
-      {tagsMenuNames.map((item) => (
-        <li className={css.menuItem} key={item}>
-          <Link className={css.menuLink} href={`/notes/filter/${item}`}>
-            {item}
+    <>
+      <ul className={css.menuList}>
+        {/* Всі нотатки */}
+        <li className={css.menuItem}>
+          <Link href="/notes/action/create" className={css.menuLink}>
+            Create note
           </Link>
         </li>
-      ))}
-    </ul>
-  );
-};
 
-export default Sidebar;
+        <li className={css.menuItem}>
+          <Link href={`/notes/filter/all`} className={css.menuLink}>
+            All notes
+          </Link>
+        </li>
+
+        {/* Унікальні теги */}
+        {tags.map((tag) => (
+          <li key={tag} className={css.menuItem}>
+            <Link href={`/notes/filter/${tag}`} className={css.menuLink}>
+              {tag}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+}

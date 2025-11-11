@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-interface ErrorProps {
+type Props = {
   error: Error;
-}
+};
 
-const Error = ({ error }: ErrorProps) => {
+const Error = ({ error }: Props) => {
   return (
     <div>
       <p>Could not fetch the list of notes. {error.message}</p>

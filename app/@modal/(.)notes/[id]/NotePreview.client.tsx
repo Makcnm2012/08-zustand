@@ -1,67 +1,60 @@
-///////////////
-'use client';
+"use client";
 
-import Section from '@/components/Section/Section';
-import { fetchNotesById } from '@/lib/api';
-import { useQuery } from '@tanstack/react-query';
-import { useParams, useRouter } from 'next/navigation';
-import css from './NotePreview.module.css';
-import Modal from '@/components/Modal/Modal';
+import { useParams, useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { fetchNoteById } from "@/lib/api";
+import { Modal } from "@/components/Modal/Modal";
+import css from "./NotePreview.module.css";
 
-const NotePreview = () => {
-  const router = useRouter();
-  const onClose = () => {
-    router.back();
-  };
+export function NotePreview() {
   const { id } = useParams<{ id: string }>();
+  const router = useRouter();
   const {
     data: note,
     isLoading,
     isError,
-    error,
   } = useQuery({
-    queryKey: ['note', id],
-    queryFn: () => fetchNotesById(id),
+    queryKey: ["note", id],
+    queryFn: () => fetchNoteById(id),
     refetchOnMount: false,
   });
-  if (isLoading) {
-    return (
-      <Section>
-        <p className={css.mid}>Loading, please wait...</p>
-      </Section>
-    );
-  }
 
-  if (isError || !note) {
+  const handleClose = () => router.back();
+
+  if (isLoading)
     return (
-      <Section>
-        <p className={css.mid}>
-          Something went wrong
-          {error instanceof Error ? `: ${error.message}` : ''}.
-        </p>
-      </Section>
+      <Modal onClose={handleClose}>
+        <div className={css.container}>Loading...</div>
+      </Modal>
     );
-  }
+
+  if (isError || !note)
+    return (
+      <Modal onClose={handleClose}>
+        <div className={css.container}>Note not found 😕</div>
+      </Modal>
+    );
 
   return (
-    <Modal closeModal={onClose}>
-      {note && (
-        <div className={css.container}>
-          <div className={css.item}>
-            <p className={css.tag}>{note.tag}</p>
-            <div className={css.header}>
-              <h2>{note.title}</h2>
-            </div>
-            <p className={css.content}>{note.content}</p>
-            <p className={css.date}>{note.createdAt}</p>
-            <button onClick={onClose} className={css.backBtn}>
-              Back
-            </button>
+    <Modal onClose={handleClose}>
+      <div className={css.container}>
+        <div className={css.item}>
+          <div className={css.header}>
+            <h2>{note.title}</h2>
+            {note.tag && <span className={css.tag}>{note.tag}</span>}
           </div>
+
+          <div className={css.content}>{note.content}</div>
+
+          <p className={css.date}>
+            {new Date(note.createdAt).toLocaleDateString()}
+          </p>
+
+          <button onClick={handleClose} className={css.backBtn}>
+            ← Back
+          </button>
         </div>
-      )}
+      </div>
     </Modal>
   );
-};
-
-export default NotePreview;
+}
